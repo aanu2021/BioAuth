@@ -211,7 +211,8 @@ function messageHandler(ws: WebSocket, message: INCOMING_MESSAGE) {
   if (message.type === INCOMING_SUPPORTED_MESSAGE.SEND_LOCATION) {
     const payload = message.payload;
     const user = userManager.getUser(payload.roomId, payload.userId);
-
+    console.log("Am I penetrating you ....");
+    console.log(payload);
     if (!user) {
       console.error("User not found in the in-memory DATABASE");
       return;

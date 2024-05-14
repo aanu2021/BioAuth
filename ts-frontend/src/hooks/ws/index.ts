@@ -89,6 +89,9 @@ export const useWebSocket = (url: string) => {
           );
           if (!existingUserIds.has(userKey)) {
             // Add new location
+            console.log("Available set : ");
+            console.log(existingUserIds);
+            console.log("User key : ", userKey);
             setLocations((prevLocations) => [
               ...prevLocations,
               {
@@ -110,6 +113,9 @@ export const useWebSocket = (url: string) => {
               `User with id ${userKey} locations updated from ws hook`,
             );
           } else {
+            console.log("Available set : ");
+            console.log(existingUserIds);
+            console.log("User key : ", userKey);
             // Update existing location
             setLocations((prevLocations) => {
               const updatedLocations = prevLocations.map((location) =>

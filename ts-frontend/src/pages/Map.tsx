@@ -146,6 +146,7 @@ export const Map = () => {
         age: currentUserAge,
         gender: currentUserGender,
         college: currentUserCollege,
+        dist_meters: 60000,
         // lat: currentUserPosition.lat,
         // lng: currentUserPosition.lng,
         Photo: currentUserPhoto,
@@ -431,11 +432,11 @@ export const Map = () => {
   }
 
   const onLoad = (circle: google.maps.Circle) => {
-    console.log('Circle onLoad circle: ', circle);
+    console.log("Circle onLoad circle: ", circle);
   };
 
   const onUnmount = (circle: google.maps.Circle) => {
-    console.log('Circle onUnmount circle: ', circle);
+    console.log("Circle onUnmount circle: ", circle);
   };
 
   return isLoaded ? (

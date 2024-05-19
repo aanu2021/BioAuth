@@ -14,14 +14,14 @@ interface Location {
   mask: boolean;
 }
 
-interface QLocationsContextType {
+interface LocationsContextType {
   locations: Location[];
   setLocations: React.Dispatch<React.SetStateAction<Location[]>>;
   locationsUserIdSet: Set<string>;
   setLocationsUserIdSet: React.Dispatch<React.SetStateAction<Set<string>>>;
 }
 
-const LocationsContext = createContext<QLocationsContextType | undefined>(
+const LocationsContext = createContext<LocationsContextType | undefined>(
   undefined,
 );
 

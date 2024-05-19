@@ -8,7 +8,8 @@ import { useLocations } from "../../context/LocationContext";
 export const useWebSocket = (url: string) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const ws = useRef<WebSocketExt | null>(null);
-  const { locations, setLocations } = useLocations();
+  const { locations, setLocations, locationsUserIdSet, setLocationsUserIdSet } =
+    useLocations();
 
   useEffect(() => {
     return () => {
@@ -84,48 +85,102 @@ export const useWebSocket = (url: string) => {
 
           const userKey = userId.toString();
 
-          const existingUserIds = new Set<string>(
-            locations.map((location) => location.id),
-          );
-          if (!existingUserIds.has(userKey)) {
+          // const existingUserIds = new Set<string>(
+          //   locations.map((location) => location.id)
+          // );
+          if (!locationsUserIdSet.has(userKey)) {
             // Add new location
-            console.log("Available set : ");
-            console.log(existingUserIds);
-            console.log("User key : ", userKey);
-            setLocations((prevLocations) => [
-              ...prevLocations,
-              {
-                id: userKey,
-                name: parsedData.payload.name,
-                email: parsedData.payload.email,
-                age: parsedData.payload.age,
-                gender: parsedData.payload.gender,
-                college: parsedData.payload.college,
-                lat: position.lat,
-                lng: position.lng,
-                dist_meters: parsedData.payload.dist_meters,
-                Photo: parsedData.payload.Photo,
-                mask: true, // mask should be dynamically assigned as per the use case
-              },
-            ]);
-            existingUserIds.add(userKey);
-            console.log(
-              `User with id ${userKey} locations updated from ws hook`,
-            );
-          } else {
-            console.log("Available set : ");
-            console.log(existingUserIds);
-            console.log("User key : ", userKey);
-            // Update existing location
-            setLocations((prevLocations) => {
-              const updatedLocations = prevLocations.map((location) =>
-                location.id === userKey ? { ...location, lat, lng } : location,
-              );
-              return updatedLocations;
+            // console.log("Available set : ");
+            // console.log(existingUserIds);
+            // console.log("User key : ", userKey);
+            const currentLocation = {
+              id: userKey,
+              name: parsedData.payload.name,
+              email: parsedData.payload.email,
+              age: parsedData.payload.age,
+              gender: parsedData.payload.gender,
+              college: parsedData.payload.college,
+              lat: position.lat,
+              lng: position.lng,
+              dist_meters: parsedData.payload.dist_meters,
+              Photo: parsedData.payload.Photo,
+              mask: true,
+            };
+            locations.push(currentLocation);
+            setLocations([...locations]);
+            // setLocations((prevLocations) => [
+            //   ...prevLocations,
+            //   {
+            //     id: userKey,
+            //     name: parsedData.payload.name,
+            //     email: parsedData.payload.email,
+            //     age: parsedData.payload.age,
+            //     gender: parsedData.payload.gender,
+            //     college: parsedData.payload.college,
+            //     lat: position.lat,
+            //     lng: position.lng,
+            //     dist_meters: parsedData.payload.dist_meters,
+            //     Photo: parsedData.payload.Photo,
+            //     mask: true, // mask should be dynamically assigned as per the use case
+            //   },
+            // ]);
+            // Details to be added inside the locations hook...
+
+            console.log({
+              id: userKey,
+              name: parsedData.payload.name,
+              email: parsedData.payload.email,
+              age: parsedData.payload.age,
+              gender: parsedData.payload.gender,
+              college: parsedData.payload.college,
+              lat: position.lat,
+              lng: position.lng,
+              dist_meters: parsedData.payload.dist_meters,
+              Photo: parsedData.payload.Photo,
+              mask: true,
             });
+
+            locationsUserIdSet.add(userKey);
+            setLocationsUserIdSet(locationsUserIdSet);
+            console.log(`User with id ${userKey} locations added from ws hook`);
+            console.log(locationsUserIdSet);
+            console.log(locations);
+          } else {
+            // console.log("Available set : ");
+            // console.log(existingUserIds);
+            // console.log("User key : ", userKey);
+            // Update existing location
+
+            const currentLocation = {
+              id: userKey,
+              name: parsedData.payload.name,
+              email: parsedData.payload.email,
+              age: parsedData.payload.age,
+              gender: parsedData.payload.gender,
+              college: parsedData.payload.college,
+              lat: position.lat,
+              lng: position.lng,
+              dist_meters: parsedData.payload.dist_meters,
+              Photo: parsedData.payload.Photo,
+              mask: true,
+            };
+
+            const newLocationsArray = locations.filter((location) => {
+              return location.id !== userKey;
+            });
+            newLocationsArray.push(currentLocation);
+            setLocations([...newLocationsArray]);
+            // setLocations((prevLocations) => {
+            //   const updatedLocations = prevLocations.map((location) =>
+            //     location.id === userKey ? { ...location, lat, lng } : location
+            //   );
+            //   return updatedLocations;
+            // });
             console.log(
               `User with id ${userKey} locations updated from ws hook`,
             );
+            console.log(locationsUserIdSet);
+            console.log(locations);
           }
         }
       });
